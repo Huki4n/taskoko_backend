@@ -37,6 +37,7 @@ issues:
         - stylecheck
         - unparam
         - whitespace
+  max-same-issues: 0
 
 linters:
   enable:
