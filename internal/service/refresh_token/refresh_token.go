@@ -16,7 +16,8 @@ func SetRefreshToken(c echo.Context, refreshToken string) {
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 		Secure:   true,
-		Path:     "/",
+
+		Path: "/",
 	})
 }
 
