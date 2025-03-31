@@ -11,4 +11,5 @@ func RegisterRoutes(e *echo.Echo, client *ent.Client) {
 
 	RegisterMessageRoutes(api, client)
 	RegisterAuthRoutes(api, client)
+	RegisterProjectRoutes(api, client)
 }

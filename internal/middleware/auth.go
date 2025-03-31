@@ -31,13 +31,16 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		accessToken := tokenParts[1]
 
 		// Проверяем access_token
-		_, err := tokens.ValidateToken(accessToken, false)
+		claims, err := tokens.ValidateToken(accessToken, false)
 		if err != nil { // Если access_token недействителен
 			return c.JSON(http.StatusUnauthorized, Response{
 				Status:  "Error jwt token",
 				Message: "Jwt token is invalid",
 			})
 		}
+
+		userId := claims.UserId
+		c.Set("userID", userId)
 
 		// Если access_token валиден, продолжаем выполнение
 		return next(c)

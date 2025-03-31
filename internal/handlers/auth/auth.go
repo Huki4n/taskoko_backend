@@ -64,8 +64,8 @@ func (h *Handler) Login(c echo.Context) error {
 		})
 	}
 
-	accessToken, errAccess := tokens.GenerateAccessToken(u.Name)
-	refreshToken, errRefresh := tokens.GenerateRefreshToken(u.Name)
+	accessToken, errAccess := tokens.GenerateAccessToken(u.Name, u.ID)
+	refreshToken, errRefresh := tokens.GenerateRefreshToken(u.Name, u.ID)
 
 	if errAccess != nil || errRefresh != nil {
 		return c.JSON(http.StatusInternalServerError, Response{
@@ -140,7 +140,7 @@ func (h *Handler) Refresh(c echo.Context) error {
 		return errorsResponse.HandleTokenError(c, err)
 	}
 
-	accessToken, errAccess := tokens.GenerateAccessToken(refreshTokenClaims.Username)
+	accessToken, errAccess := tokens.GenerateAccessToken(refreshTokenClaims.Username, refreshTokenClaims.UserId)
 	if errAccess != nil {
 		return errorsResponse.HandleTokenError(c, errAccess)
 	}
