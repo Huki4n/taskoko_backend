@@ -1,88 +1,85 @@
+version: "2"
 run:
-  timeout: 5m
   tests: true
-
-issues:
-  exclude-use-default: false
-  exclude-files:
-    - '\.gen\.go'
-    - '\.pb\.go'
-  exclude-dirs:
-    - vendor
-    - .git
-    - node_modules
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - govet
-        - staticcheck
-        - gosimple
-        - unused
-        - ineffassign
-        - typecheck
-        - gofmt
-        - goimports
-        - misspell
-        - unconvert
-        - gocyclo
-        - dupl
-        - goconst
-        - gosec
-        - depguard
-        - gocritic
-        - lll
-        - nakedret
-        - prealloc
-        - stylecheck
-        - unparam
-        - whitespace
-  max-same-issues: 0
-
 linters:
   enable:
-    - govet
-    - errcheck
-    - staticcheck
-    - gosimple
-    - unused
-    - ineffassign
-    - typecheck
-    - gofmt
-    - goimports
-    - misspell
-    - unconvert
-    - gocyclo
+    - depguard
     - dupl
     - goconst
-    - gosec
-    - depguard
     - gocritic
+    - gocyclo
+    - gosec
     - lll
+    - misspell
     - nakedret
     - prealloc
-    - stylecheck
+    - staticcheck
+    - unconvert
     - unparam
     - whitespace
+  settings:
+    dupl:
+      threshold: 100
+    gocritic:
+      enabled-checks:
+        - ruleguard
+    gocyclo:
+      min-complexity: 15
+    gosec:
+      excludes:
+        - G104
+    lll:
+      line-length: 120
+    misspell:
+      locale: US
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - depguard
+          - dupl
+          - errcheck
+          - goconst
+          - gocritic
+          - gocyclo
+          - gosec
+          - govet
+          - ineffassign
+          - lll
+          - misspell
+          - nakedret
+          - prealloc
+          - staticcheck
+          - unconvert
+          - unparam
+          - unused
+          - whitespace
+        path: _test\.go
+    paths:
+      - \.gen\.go
+      - \.pb\.go
+      - vendor
+      - .git
+      - node_modules
+      - third_party$
+      - builtin$
+      - examples$
+issues:
+  max-same-issues: 0
+formatters:
+  enable:
     - gci
-
-linters-settings:
-  gocyclo:
-    min-complexity: 15
-  lll:
-    line-length: 120
-  misspell:
-    locale: US
-  dupl:
-    threshold: 100
-  gosec:
-    excludes:
-      - G104
-
-  gocritic:
-    enabled-checks:
-      - ruleguard
-
-output:
-  formats:
-    - format: colored-line-number
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - \.gen\.go
+      - \.pb\.go
+      - vendor
+      - .git
+      - node_modules
+      - third_party$
+      - builtin$
+      - examples$
+      - _test\.go
