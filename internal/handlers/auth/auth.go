@@ -8,7 +8,7 @@ import (
 
 	"awesomeProject/ent"
 	"awesomeProject/ent/user"
-	. "awesomeProject/internal/models"
+	"awesomeProject/internal/models"
 	"awesomeProject/internal/service/refresh_token"
 	"awesomeProject/pkg/errorsResponse"
 	"awesomeProject/pkg/tokens"
@@ -40,7 +40,7 @@ func (h *Handler) Login(c echo.Context) error {
 	}
 
 	if err := c.Bind(&request); err != nil {
-		return c.JSON(http.StatusBadRequest, Response{
+		return c.JSON(http.StatusBadRequest, models.Response{
 			Status:  "Error",
 			Message: "Invalid input",
 		})
@@ -52,14 +52,14 @@ func (h *Handler) Login(c echo.Context) error {
 		Only(context.Background())
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Response{
+		return c.JSON(http.StatusInternalServerError, models.Response{
 			Status:  "Error",
 			Message: fmt.Sprintf("Not Found User by email %s", request.Email),
 		})
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(request.Password)); err != nil {
-		return c.JSON(http.StatusUnauthorized, Response{
+		return c.JSON(http.StatusUnauthorized, models.Response{
 			Status:  "Error",
 			Message: "Wrong Password",
 		})
@@ -69,7 +69,7 @@ func (h *Handler) Login(c echo.Context) error {
 	refreshToken, errRefresh := tokens.GenerateRefreshToken(u.Name, u.ID)
 
 	if errAccess != nil || errRefresh != nil {
-		return c.JSON(http.StatusInternalServerError, Response{
+		return c.JSON(http.StatusInternalServerError, models.Response{
 			Status:  "Error",
 			Message: "Failed to generate refresh_token",
 		})
@@ -92,7 +92,7 @@ func (h *Handler) Register(c echo.Context) error {
 	}
 
 	if err := c.Bind(&request); err != nil {
-		return c.JSON(http.StatusBadRequest, Response{
+		return c.JSON(http.StatusBadRequest, models.Response{
 			Status:  "Error",
 			Message: "Invalid input",
 		})
@@ -101,7 +101,7 @@ func (h *Handler) Register(c echo.Context) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Response{
+		return c.JSON(http.StatusInternalServerError, models.Response{
 			Status:  "Error",
 			Message: "Failed to hash password",
 		})
@@ -115,19 +115,19 @@ func (h *Handler) Register(c echo.Context) error {
 
 	if err != nil {
 		if ent.IsConstraintError(err) {
-			return c.JSON(http.StatusConflict, Response{
+			return c.JSON(http.StatusConflict, models.Response{
 				Status:  "Error",
 				Message: "User already exists",
 			})
 		}
 
-		return c.JSON(http.StatusInternalServerError, Response{
+		return c.JSON(http.StatusInternalServerError, models.Response{
 			Status:  "Error",
 			Message: "Failed to create user",
 		})
 	}
 
-	return c.JSON(http.StatusCreated, Response{
+	return c.JSON(http.StatusCreated, models.Response{
 		Status:  "Success",
 		Message: fmt.Sprintf("User %s has been registered", newUser.Name),
 	})
