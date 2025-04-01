@@ -1,11 +1,12 @@
 package refresh_token
 
 import (
+	"net/http"
+	"time"
+
 	"awesomeProject/pkg/errorsResponse"
 	"awesomeProject/pkg/tokens"
 	"github.com/labstack/echo/v4"
-	"net/http"
-	"time"
 )
 
 func SetRefreshToken(c echo.Context, refreshToken string) {

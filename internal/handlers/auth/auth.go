@@ -1,18 +1,19 @@
 package auth
 
 import (
+	"context"
+	_ "errors"
+	"fmt"
+	"net/http"
+
 	"awesomeProject/ent"
 	"awesomeProject/ent/user"
 	. "awesomeProject/internal/models"
 	"awesomeProject/internal/service/refresh_token"
 	"awesomeProject/pkg/errorsResponse"
 	"awesomeProject/pkg/tokens"
-	"context"
-	_ "errors"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 )
 
 // Handler содержит клиент Ent
@@ -134,7 +135,6 @@ func (h *Handler) Register(c echo.Context) error {
 
 // Refresh обновляет access token пользователя
 func (h *Handler) Refresh(c echo.Context) error {
-
 	refreshTokenClaims, err := refresh_token.GetClaims(c)
 	if err != nil {
 		return errorsResponse.HandleTokenError(c, err)

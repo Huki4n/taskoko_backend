@@ -1,12 +1,12 @@
 package tokens
 
 import (
-	errorsResponse "awesomeProject/pkg/errorsResponse"
 	"errors"
 	"fmt"
 	"os"
 	"time"
 
+	errorsResponse "awesomeProject/pkg/errorsResponse"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -55,15 +55,13 @@ func ValidateToken(tokenString string, isRefresh bool) (*Claims, error) {
 
 	if err != nil {
 		// Обработка различных типов ошибок
-		if errors.Is(err, jwt.ErrTokenExpired) {
+		switch {
+		case errors.Is(err, jwt.ErrTokenExpired):
 			fmt.Printf("JWT validation error: %v", err)
 			return nil, errorsResponse.ErrTokenExpired
-		} else if errors.Is(err, jwt.ErrTokenMalformed) {
+		case errors.Is(err, jwt.ErrTokenMalformed), errors.Is(err, jwt.ErrTokenSignatureInvalid):
 			return nil, errorsResponse.ErrTokenInvalid
-		} else if errors.Is(err, jwt.ErrTokenSignatureInvalid) {
-			return nil, errorsResponse.ErrTokenInvalid
-		} else {
-			// Логирование внутренней ошибки может быть полезным
+		default:
 			return nil, errorsResponse.ErrTokenInvalid
 		}
 	}

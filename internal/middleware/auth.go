@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"net/http"
+	"strings"
+
 	. "awesomeProject/internal/models"
 	"awesomeProject/pkg/tokens"
 	"github.com/labstack/echo/v4"
-	"net/http"
-	"strings"
 )
 
 func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {

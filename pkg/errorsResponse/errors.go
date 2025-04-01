@@ -2,8 +2,9 @@ package errorsResponse
 
 import (
 	"errors"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 type Response struct {

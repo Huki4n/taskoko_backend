@@ -1,16 +1,23 @@
 package message
 
 import (
-	"awesomeProject/ent"
-	"awesomeProject/ent/project"
-	m "awesomeProject/internal/models"
 	"context"
-	"github.com/labstack/echo/v4"
-	"github.com/samber/lo"
 	"log"
 	"net/http"
 	"strconv"
+
+	"awesomeProject/ent"
+	"awesomeProject/ent/project"
+	m "awesomeProject/internal/models"
+	"github.com/labstack/echo/v4"
+	"github.com/samber/lo"
 )
+
+type ProjectUser struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
 
 type GetProjectResponse struct {
 	ID      int                  `json:"id"`
@@ -23,12 +30,6 @@ type GetProjectsResponse struct {
 	ID    int           `json:"id"`
 	Name  string        `json:"name"`
 	Users []ProjectUser `json:"users"`
-}
-
-type ProjectUser struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
 }
 
 // Handler содержит клиент Ent
@@ -100,7 +101,8 @@ func (h *Handler) GetProjects(c echo.Context) error {
 		})
 	}
 
-	var response []GetProjectsResponse
+	response := make([]GetProjectsResponse, 0, len(projects))
+
 	for _, p := range projects {
 		response = append(response, GetProjectsResponse{
 			ID:   p.ID,
@@ -196,7 +198,7 @@ func (h *Handler) CreateProject(c echo.Context) error {
 }
 
 // EditProject обрабатывает PATCH /api/project/edit-project/:id
-//func (h *Handler) EditProject(c echo.Context) error {
+// func (h *Handler) EditProject(c echo.Context) error {
 //	idParam := c.Param("id")
 //	id, err := strconv.Atoi(idParam)
 //	if err != nil {
@@ -209,9 +211,9 @@ func (h *Handler) CreateProject(c echo.Context) error {
 //	var input struct {
 //		Text string `json:"text"`
 //	}
-//}
+// }
 //
-//// DeleteProject обрабатывает Delete /api/project/delete-project/:id
-//func (h *Handler) DeleteProject(c echo.Context) error {
+// DeleteProject обрабатывает Delete /api/project/delete-project/:id
+// func (h *Handler) DeleteProject(c echo.Context) error {
 //
-//}
+// }

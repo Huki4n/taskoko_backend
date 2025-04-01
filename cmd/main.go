@@ -1,17 +1,18 @@
 package main
 
 import (
-	"awesomeProject/ent"
-	"awesomeProject/internal/routes"
 	"context"
 	"fmt"
+	"log"
+	"net/url"
+	"os"
+
+	"awesomeProject/ent"
+	"awesomeProject/internal/routes"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/lib/pq"
-	"log"
-	"net/url"
-	"os"
 )
 
 const (
@@ -44,13 +45,18 @@ func main() {
 
 	client, err := ent.Open("postgres", dsn)
 	if err != nil {
-		log.Fatalf("failed opening connection to database: %v", err)
+		fmt.Printf("failed opening connection to database: %v", err)
 	}
-	defer client.Close()
+	defer func(client *ent.Client) {
+		err := client.Close()
+		if err != nil {
+			fmt.Printf("failed closing connection to database: %v", err)
+		}
+	}(client)
 
 	// Автоматическая миграция схемы (создание таблицы Message, если её нет)
 	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
+		fmt.Printf("failed creating schema resources: %v", err)
 	}
 
 	e := echo.New()
