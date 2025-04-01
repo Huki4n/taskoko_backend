@@ -1,67 +1,68 @@
 version: "2"
 run:
+  build-tags:
+    - unit
+    - integration
   tests: true
 linters:
+  default: none
   enable:
-    - depguard
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - copyloopvar
+    - dogsled
     - dupl
-    - goconst
+    - dupword
+    - durationcheck
+    - errcheck
+    - errchkjson
+    - errorlint
+    - exhaustive
+    - gocheckcompilerdirectives
+    - gochecknoinits
+    - gochecksumtype
     - gocritic
     - gocyclo
+    - goprintffuncname
     - gosec
-    - lll
+    - gosmopolitan
+    - govet
+    - ineffassign
+    - intrange
+    - loggercheck
+    - makezero
     - misspell
+    - musttag
     - nakedret
-    - prealloc
+    - nilerr
+    - noctx
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - recvcheck
+    - rowserrcheck
+    - spancheck
+    - sqlclosecheck
     - staticcheck
+    - testableexamples
+    - testifylint
     - unconvert
     - unparam
+    - unused
     - whitespace
-  settings:
-    dupl:
-      threshold: 100
-    gocritic:
-      enabled-checks:
-        - ruleguard
-    gocyclo:
-      min-complexity: 15
-    gosec:
-      excludes:
-        - G104
-    lll:
-      line-length: 120
-    misspell:
-      locale: US
+    - zerologlint
   exclusions:
     generated: lax
-    rules:
-      - linters:
-          - depguard
-          - dupl
-          - errcheck
-          - goconst
-          - gocritic
-          - gocyclo
-          - gosec
-          - govet
-          - ineffassign
-          - lll
-          - misspell
-          - nakedret
-          - prealloc
-          - staticcheck
-          - unconvert
-          - unparam
-          - unused
-          - whitespace
-        path: _test\.go
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     paths:
-      - ent
-      - \.gen\.go
-      - \.pb\.go
-      - vendor
-      - .git
-      - node_modules
       - third_party$
       - builtin$
       - examples$
@@ -69,19 +70,10 @@ issues:
   max-same-issues: 0
 formatters:
   enable:
-    - gci
     - gofmt
-    - goimports
   exclusions:
     generated: lax
     paths:
-      - \.gen\.go
-      - \.pb\.go
-      - vendor
-      - .git
-      - node_modules
       - third_party$
       - builtin$
       - examples$
-      - _test\.go
-
