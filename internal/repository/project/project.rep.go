@@ -4,6 +4,7 @@ import (
 	"awesomeProject/ent"
 	"awesomeProject/ent/project"
 	"context"
+	"fmt"
 	"log"
 )
 
@@ -29,7 +30,7 @@ func (r *ProjectRepository) CreateProject(ctx context.Context, projectName strin
 	if err != nil {
 		err := tx.Rollback()
 		if err != nil {
-			log.Println("Create project rollback error:", err)
+			log.Printf("Create project rollback error: %v", err)
 			return nil, err
 		}
 		return nil, err
@@ -45,7 +46,7 @@ func (r *ProjectRepository) CreateProject(ctx context.Context, projectName strin
 	if err != nil {
 		err := tx.Rollback()
 		if err != nil {
-			log.Println("Create columns rollback error:", err)
+			log.Printf("Create columns rollback error: %v", err)
 			return nil, err
 		}
 		return nil, err
@@ -59,7 +60,7 @@ func (r *ProjectRepository) CreateProject(ctx context.Context, projectName strin
 	if err != nil {
 		err := tx.Rollback()
 		if err != nil {
-			log.Println("Project update rollback error:", err)
+			log.Printf("Project update rollback error: %v", err)
 			return nil, err
 		}
 		return nil, err
@@ -73,7 +74,7 @@ func (r *ProjectRepository) CreateProject(ctx context.Context, projectName strin
 	return createProject, nil
 }
 
-// GetProject
+// GetProject логика взаимодействия с бд для получения проекта по id
 func (r *ProjectRepository) GetProject(ctx context.Context, projectID int) (*ent.Project, error) {
 	// Ищем проект по ID
 	getProject, err := r.client.Project.Query().
@@ -93,7 +94,7 @@ func (r *ProjectRepository) GetProject(ctx context.Context, projectID int) (*ent
 	return getProject, nil
 }
 
-// GetProjects
+// GetProjects логика взаимодействия с бд для получения всех проектов юзера
 func (r *ProjectRepository) GetProjects(ctx context.Context) ([]*ent.Project, error) {
 	projects, err := r.client.Project.Query().WithUsers(
 		func(q *ent.UserQuery) {
@@ -105,5 +106,27 @@ func (r *ProjectRepository) GetProjects(ctx context.Context) ([]*ent.Project, er
 		return nil, err
 	}
 
-	return projects, err
+	return projects, nil
+}
+
+// DeleteProject логика взаимодействия с бд для получения всех проектов юзера
+func (r *ProjectRepository) DeleteProject(ctx context.Context, projectID int) (string, error) {
+	_, err := r.client.Project.Query().Where(project.ID(projectID)).First(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return "", fmt.Errorf("project with ID %d not found", projectID)
+		}
+
+		log.Printf("Error while querying project: %v", err)
+		return "", err
+	}
+
+	// Если проект найден, удаляем его
+	_, err = r.client.Project.Delete().Where(project.ID(projectID)).Exec(ctx)
+	if err != nil {
+		log.Printf("Error while deleting project: %v", err)
+		return "", err
+	}
+
+	return "Project has been deleted", nil
 }

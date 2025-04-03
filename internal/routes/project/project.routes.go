@@ -19,4 +19,5 @@ func RegisterProjectRoutes(api *echo.Group, client *ent.Client) {
 	projectGroup.POST("/create-project", handlerProject.CreateProject)
 	projectGroup.GET("/get-project/:id", handlerProject.GetProject)
 	projectGroup.GET("/get-projects", handlerProject.GetProjects)
+	projectGroup.DELETE("/delete-project/:id", handlerProject.DeleteProject)
 }

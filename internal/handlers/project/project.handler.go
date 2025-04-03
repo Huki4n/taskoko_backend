@@ -100,7 +100,27 @@ func (h *ProjectHandler) CreateProject(c echo.Context) error {
 //	}
 // }
 //
+
 // DeleteProject обрабатывает Delete /api/project/delete-project/:id
-// func (h *Handler) DeleteProject(c echo.Context) error {
-//
-// }
+func (h *ProjectHandler) DeleteProject(c echo.Context) error {
+	id := c.Param("id")
+
+	projectID, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response{
+			Status:  "Error",
+			Message: "Invalid project ID",
+		})
+	}
+
+	response, err := h.projectService.DeleteProject(c.Request().Context(), projectID)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Status:  "Error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
