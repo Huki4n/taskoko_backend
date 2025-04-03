@@ -37,11 +37,9 @@ func main() {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbName := os.Getenv("DB_NAME")
-	dbPassword := os.Getenv("DB_PASSWORD")
+	dbPassword := url.QueryEscape(os.Getenv("DB_PASSWORD"))
 
-	escapedPassword := url.QueryEscape(dbPassword)
-
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, escapedPassword, dbHost, dbPort, dbName)
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	client, err := ent.Open("postgres", dsn)
 	if err != nil {
@@ -54,9 +52,8 @@ func main() {
 		}
 	}(client)
 
-	// Автоматическая миграция схемы (создание таблицы Message, если её нет)
 	if err := client.Schema.Create(context.Background()); err != nil {
-		fmt.Printf("failed creating schema resources: %v", err)
+		fmt.Printf("fa	iled creating schema resources: %v", err)
 	}
 
 	e := echo.New()

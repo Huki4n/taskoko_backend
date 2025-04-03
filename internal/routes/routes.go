@@ -2,6 +2,8 @@ package routes
 
 import (
 	"awesomeProject/ent"
+	"awesomeProject/internal/routes/auth"
+	"awesomeProject/internal/routes/project"
 	"github.com/labstack/echo/v4"
 )
 
@@ -9,7 +11,6 @@ import (
 func RegisterRoutes(e *echo.Echo, client *ent.Client) {
 	api := e.Group("/api")
 
-	RegisterMessageRoutes(api, client)
-	RegisterAuthRoutes(api, client)
-	RegisterProjectRoutes(api, client)
+	auth.RegisterAuthRoutes(api, client)
+	project.RegisterProjectRoutes(api, client)
 }

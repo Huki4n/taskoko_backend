@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"awesomeProject/internal/service/auth/refresh_token"
 	"context"
 	_ "errors"
 	"fmt"
@@ -9,7 +10,6 @@ import (
 	"awesomeProject/ent"
 	"awesomeProject/ent/user"
 	"awesomeProject/internal/models"
-	"awesomeProject/internal/service/refresh_token"
 	"awesomeProject/pkg/errorsResponse"
 	"awesomeProject/pkg/tokens"
 	"github.com/labstack/echo/v4"

@@ -1,4 +1,4 @@
-package routes
+package task
 
 // func RegisterTaskRoutes(api *echo.Group, client *ent.Client) {
 //	handlerTask := task.NewHandler(client)

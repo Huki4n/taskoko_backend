@@ -3,7 +3,7 @@ package message
 //
 // import (
 //	"awesomeProject/ent"
-//	m "awesomeProject/internal/models"
+//	m "awesomeProject/internal/project"
 //	"context"
 //	"github.com/labstack/echo/v4"
 //	"net/http"

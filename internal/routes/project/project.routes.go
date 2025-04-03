@@ -1,14 +1,18 @@
-package routes
+package project
 
 import (
 	"awesomeProject/ent"
-	project "awesomeProject/internal/handlers/project"
+	"awesomeProject/internal/handlers/project"
 	"awesomeProject/internal/middleware"
+	"awesomeProject/internal/repository/project"
+	"awesomeProject/internal/service/project"
 	"github.com/labstack/echo/v4"
 )
 
 func RegisterProjectRoutes(api *echo.Group, client *ent.Client) {
-	handlerProject := project.NewProjectHandler(client)
+	repo := repository.NewProjectRepository(client)
+	srv := service.NewProjectService(repo)
+	handlerProject := handler.NewProjectHandler(srv)
 
 	projectGroup := api.Group("/project", middleware.AuthMiddleware)
 
